@@ -18,9 +18,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/api/openapi.json" if show_docs else None,
         redoc_url=None,
     )
+    # The dashboard calls the API from another origin and sends the session cookie,
+    # so it is the only origin allowed, and credentials are allowed.
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.cors_origins,
+        allow_origins=[settings.frontend_url],
+        allow_credentials=True,
         allow_methods=["GET", "POST", "PATCH", "DELETE"],
         allow_headers=["Content-Type"],
     )
