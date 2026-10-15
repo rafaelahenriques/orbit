@@ -1,0 +1,17 @@
+# Environment files hold secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Local tooling
+.claude/
+
+# OS
+.DS_Store
