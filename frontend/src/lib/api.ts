@@ -3,6 +3,10 @@
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+// Give up on an API that doesn't answer, so the page can show an error instead of
+// loading forever.
+const TIMEOUT_MS = 10_000;
+
 export type User = {
   id: string;
   email: string;
@@ -11,10 +15,11 @@ export type User = {
   google_connected: boolean;
 };
 
-/** Returns the signed-in user, or null when nobody is signed in. */
+/** Returns the signed-in user, or null when nobody is signed in. Throws if the API can't be reached. */
 export async function fetchCurrentUser(): Promise<User | null> {
   const response = await fetch(`${API_URL}/api/auth/me`, {
     credentials: "include",
+    signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   if (response.status === 401) return null;
   if (!response.ok) {
@@ -27,6 +32,7 @@ export async function signOut(): Promise<void> {
   const response = await fetch(`${API_URL}/api/auth/logout`, {
     method: "POST",
     credentials: "include",
+    signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   if (!response.ok) throw new Error(`Could not sign out (${response.status})`);
 }
