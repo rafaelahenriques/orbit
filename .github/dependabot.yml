@@ -10,11 +10,24 @@ updates:
     directory: /frontend
     schedule:
       interval: weekly
+    ignore:
+      # typescript-eslint, used by Next.js's lint config, doesn't support
+      # TypeScript 7 yet. Remove this rule once it does.
+      - dependency-name: typescript
+        versions: [">=7"]
+      # Node's type definitions must match the Node version we run (.nvmrc).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: docker
     directories: [/backend, /frontend]
     schedule:
       interval: weekly
+    ignore:
+      # Stay on a long-term support (LTS) release of Node. Upgrade the major
+      # version by hand, together with .nvmrc and @types/node.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: docker-compose
     directory: /
