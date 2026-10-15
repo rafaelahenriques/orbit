@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 
-import { Sidebar } from "@/components/sidebar";
+import { SessionProvider } from "@/components/session-provider";
 
 import "./globals.css";
 
@@ -25,12 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <div className="flex min-h-dvh flex-col md:flex-row">
-          <Sidebar />
-          <main id="main" className="flex-1 px-4 py-8 md:px-10 md:py-10">
-            <div className="mx-auto max-w-5xl">{children}</div>
-          </main>
-        </div>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
