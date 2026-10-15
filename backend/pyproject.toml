@@ -6,7 +6,10 @@ requires-python = ">=3.14"
 dependencies = [
     "alembic>=1.20.0",
     "celery[redis]>=5.6.3",
+    "cryptography>=50.0.2",
     "fastapi>=0.143.1",
+    "httpx2>=2.13.1",
+    "itsdangerous>=2.2.0",
     "psycopg[binary]>=3.3.6",
     "pydantic-settings>=2.16.0",
     "sqlalchemy>=2.1.4",
@@ -31,9 +34,18 @@ select = [
 pythonpath = ["."]
 testpaths = ["tests"]
 
+# Test-only values for settings that have no defaults. Never use them anywhere else.
+[tool.pytest_env]
+ENVIRONMENT = "test"
+GOOGLE_CLIENT_ID = "test-client-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "test-client-secret"
+SESSION_SECRET = "test-session-secret-not-for-real-use"
+# base64 of "test-only-key-do-not-use-in-prod", a valid Fernet key.
+TOKEN_ENCRYPTION_KEY = "dGVzdC1vbmx5LWtleS1kby1ub3QtdXNlLWluLXByb2Q="
+
 [dependency-groups]
 dev = [
-    "httpx2>=2.13.1",
     "pytest>=9.1.1",
+    "pytest-env>=1.8.0",
     "ruff>=0.17.0",
 ]

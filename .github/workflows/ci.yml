@@ -64,6 +64,12 @@ jobs:
       - name: Start the stack
         run: |
           cp .env.example .env
+          # Throwaway values for the secrets that have no defaults. Google sign-in stays
+          # unset, as on a fresh clone. Later lines in .env override the empty ones.
+          {
+            echo "SESSION_SECRET=$(openssl rand -hex 32)"
+            echo "TOKEN_ENCRYPTION_KEY=$(openssl rand -base64 32 | tr '+/' '-_')"
+          } >> .env
           docker compose up --build --detach
       - name: Check the API is healthy
         run: curl --fail --silent --retry 30 --retry-delay 2 --retry-all-errors http://localhost:8000/api/health
